@@ -1,0 +1,25 @@
+version: '3'
+services:
+  db:
+    image: postgres:9.6.4
+    volumes:
+      - ./docker/db:/var/lib/postgresql/data
+    environment:
+      - TZ=Asia/Tokyo
+  ruby:
+    build:
+      context: .
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./src:/railsapp-template
+    ports:
+      - "3000:3000"
+    environment:
+      - TZ=Asia/Tokyo
+    links:
+      - db
+    depends_on:
+      - db
+
